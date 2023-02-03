@@ -38,11 +38,122 @@ function App() {
       const networkId = await web3.eth.getChainId();
       setGetNetwork(networkId);
       const network = "31411";
-      setContractAddress("0x..");
+      setContractAddress("0xb48c947d9e6a38bbb64823De5F79a16d48D3d3a8");
       // Instantiate smart contract instance
       const QrCodeContract = new web3.eth.Contract(
-        [],
-        "0x.."
+        [
+          {
+            "constant": false,
+            "inputs": [
+              {
+                "name": "_videoHash",
+                "type": "string"
+              },
+              {
+                "name": "_title",
+                "type": "string"
+              }
+            ],
+            "name": "uploadVideo",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "name": "hash",
+                "type": "string"
+              },
+              {
+                "indexed": false,
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "indexed": false,
+                "name": "author",
+                "type": "address"
+              }
+            ],
+            "name": "VideoUploaded",
+            "type": "event"
+          },
+          {
+            "constant": true,
+            "inputs": [],
+            "name": "name",
+            "outputs": [
+              {
+                "name": "",
+                "type": "string"
+              }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "constant": true,
+            "inputs": [],
+            "name": "videoCount",
+            "outputs": [
+              {
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "constant": true,
+            "inputs": [
+              {
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "name": "videos",
+            "outputs": [
+              {
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "name": "hash",
+                "type": "string"
+              },
+              {
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "name": "author",
+                "type": "address"
+              }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+          }
+        ],
+        "0xb48c947d9e6a38bbb64823De5F79a16d48D3d3a8"
       );
       setGetQrCodeContract(QrCodeContract);
       // Set provider
