@@ -8,7 +8,7 @@ function QrCodeTypes() {
         <div className="container px-5 py-24 mx-auto">
           <div className="text-center mb-20">
             <h1 className="sm:text-3xl text-2xl font-medium text-center title-font text-gray-900 mb-2">
-              First ever decentralized QR Code generator
+              First ever decentralized QR Code generator!
             </h1>
             <p className="text-base text-gray-500 leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto mb-6">
               Powered by Filecoin and ⁂ web3.storage
@@ -193,9 +193,6 @@ function QrCodeTypes() {
               </Link>
             </div>
           </div>
-          <p className="text-sm text-center text-gray-500 leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto mt-4">
-            More coming soon!
-          </p>
         </div>
       </section>
     </div>
