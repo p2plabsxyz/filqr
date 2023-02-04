@@ -73,7 +73,7 @@ function Mp3(
           albumImageLink == null
             ? "https://dweb.link/ipfs/bafkreiaq6xup7mgczazbpucxz7vh5hgsrx4lg6lfv23fnvzvpx4oq4zpqa/"
             : albumImageLink
-        }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>     `,
+        }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>     `,
       ],
       { type: "text/html" }
     );
@@ -343,7 +343,7 @@ function Mp3(
                         albumImageLink == null
                           ? "https://dweb.link/ipfs/bafkreiaq6xup7mgczazbpucxz7vh5hgsrx4lg6lfv23fnvzvpx4oq4zpqa/"
                           : albumImageLink
-                      }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>    `}
+                      }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>    `}
                     ></iframe>
                   ) : (
                     <iframe
@@ -355,7 +355,7 @@ function Mp3(
                         albumImageLink == null
                           ? "https://dweb.link/ipfs/bafkreiaq6xup7mgczazbpucxz7vh5hgsrx4lg6lfv23fnvzvpx4oq4zpqa/"
                           : albumImageLink
-                      }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>    `}
+                      }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>    `}
                     ></iframe>
                   )}
                 </>
