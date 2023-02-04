@@ -142,7 +142,7 @@ function SocialMedia(
                 value={header}
                 maxLength="50"
                 onChange={(e) => setHeader(e.target.value)}
-                placeholder="Heading (max length 50 characters)"
+                placeholder="Heading (max length 50 chars)"
                 className="mt-2 w-80 bg-white rounded border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-white focus:border-indigo-500 text-base outline-none text-gray-700 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 required
               />
@@ -151,7 +151,7 @@ function SocialMedia(
                 value={about}
                 maxLength="200"
                 onChange={(e) => setAbout(e.target.value)}
-                placeholder="About (max length 200 characters)"
+                placeholder="About (max length 200 chars)"
                 className="resize-y mt-2 w-full bg-white rounded border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-white focus:border-indigo-500 text-base outline-none text-gray-700 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 required
               />
