@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function QrCodeTypes() {
   return (
     <div>
-      <section className="text-gray-600 body-font">
+      <section className="section text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           <div className="text-center mb-20">
             <h1 className="sm:text-3xl text-2xl font-medium text-center title-font text-gray-900 mb-2">
@@ -20,7 +20,7 @@ function QrCodeTypes() {
           <div className="flex flex-wrap lg:w-3/6 sm:mx-auto sm:mb-2 -mx-2">
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/text">
-                <div className="bg-gray-100 rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -41,7 +41,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/socialmedia">
-                <div className="bg-gray-100 rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -63,7 +63,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/vcard">
-                <div className="bg-gray-100 rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -85,7 +85,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/coupons">
-                <div className="bg-gray-100 rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -107,7 +107,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/mp3">
-                <div className="bg-gray-100 rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -129,7 +129,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/video">
-                <div className="bg-gray-100 rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -150,7 +150,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/apps">
-                <div className="bg-gray-100 rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -172,7 +172,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/file">
-                <div className="bg-gray-100 rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -188,7 +188,7 @@ function QrCodeTypes() {
                     />
                   </svg>
 
-                  <span className="title-font font-bold">File</span>
+                  <span className="title-font font-bold">Docs</span>
                 </div>
               </Link>
             </div>
