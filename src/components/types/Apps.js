@@ -24,7 +24,7 @@ const qrCode = new QRCodeStyling({
   },
 });
 
-function Mp3(
+function Apps(
   isConnected,
   accountAddress,
   connectWallet,
@@ -344,4 +344,4 @@ function Mp3(
   );
 }
 
-export default Mp3;
+export default Apps;
