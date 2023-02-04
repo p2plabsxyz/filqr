@@ -42,13 +42,13 @@ function Video(
   const [loading, setLoading] = useState(false);
   const [loadingVideo, setLoadingVideo] = useState(false);
 
-  async function handleAudioFileChange() {
+  async function handleVideoFileChange() {
     setLoadingVideo(true);
-    const audioInput = document.getElementById("video");
-    const audioCid = await client.put(audioInput.files, {
+    const videoInput = document.getElementById("video");
+    const videoCid = await client.put(videoInput.files, {
       wrapWithDirectory: false,
     });
-    setVideoLink(`https://dweb.link/ipfs/${audioCid}/`);
+    setVideoLink(`https://dweb.link/ipfs/${videoCid}/`);
     setLoadingVideo(false);
   }
 
@@ -161,7 +161,7 @@ function Video(
                 type="file"
                 id="video"
                 accept="video/*"
-                onChange={handleAudioFileChange}
+                onChange={handleVideoFileChange}
                 className="inline-flex mt-2 w-80 bg-white cursor-pointer rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-white focus:border-indigo-500 text-base outline-none text-gray-700 leading-8 transition-colors duration-200 ease-in-out"
                 required
               />
