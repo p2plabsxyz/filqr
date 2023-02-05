@@ -5,7 +5,7 @@ import Web3 from "web3";
 import Navbar from "./components/Navbar";
 import Text from "./components/types/Text";
 import SocialMedia from "./components/types/SocialMedia";
-import VCard from "./components/types/SocialMedia";
+import VCard from "./components/types/vcards";
 import Coupons from "./components/types/Coupons";
 import Mp3 from "./components/types/Mp3";
 import Video from "./components/types/Video";
@@ -210,3 +210,4 @@ function App() {
 }
 
 export default App;
+
