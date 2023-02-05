@@ -10,7 +10,7 @@ import Coupons from "./components/types/Coupons";
 import Mp3 from "./components/types/Mp3";
 import Video from "./components/types/Video";
 import Apps from "./components/types/Apps";
-import File from "./components/types/File";
+import Docs from "./components/types/docs";
 import QrCodeDashboard from "./components/QrCodeDashboard";
 import About from './components/About'
 import Footer from "./components/Footer";
@@ -175,10 +175,10 @@ function App() {
                     }
                   />
                   <Route
-                    path="/file"
+                    path="/docs"
                     exact
                     element={
-                      <File
+                      <Docs
                         connectWallet={connectWallet}
                         walletStatus={walletStatus}
                         web3={getWeb3}

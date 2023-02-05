@@ -171,7 +171,7 @@ function QrCodeTypes() {
               </Link>
             </div>
             <div className="p-2 sm:w-1/2 w-full">
-              <Link to="/file">
+              <Link to="/docs">
                 <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
