@@ -24,13 +24,13 @@ const qrCode = new QRCodeStyling({
   },
 });
 
-function Coupons(
+function Coupons({
   isConnected,
   accountAddress,
   connectWallet,
   walletStatus,
-  QrCodeContract
-) {
+  getQrCodeContract,
+}) {
   const qrRef = useRef(null);
   const [companyName, setCompanyName] = useState("Company name");
   const [title, setTitle] = useState("40% OFF YOUR PURCHASE");
@@ -46,6 +46,8 @@ function Coupons(
   const [link, setLink] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingCouponImage, setLoadingCouponImage] = useState(false);
+  const [processTransaction, setProcessTransaction] = useState(false);
+  const [txnHash, setTxnHash] = useState(null);
 
   async function handleCouponImageChange() {
     setLoadingCouponImage(true);
@@ -74,6 +76,20 @@ function Coupons(
     const cid = await client.put(file, { wrapWithDirectory: false });
     setCid(cid);
     setLink(`https://dweb.link/ipfs/${cid}/`);
+    if (getQrCodeContract) {
+      try {
+        setProcessTransaction(true);
+        await getQrCodeContract.methods
+          .uploadFile(cid, file[0].size, "Coupons")
+          .send({ from: accountAddress })
+          .on("transactionHash", function (hash) {
+            setTxnHash(hash);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setProcessTransaction(false);
     setLoading(false);
   }
 
@@ -82,7 +98,7 @@ function Coupons(
       data: link,
     });
     qrCode.append(qrRef.current);
-  }, [link]);
+  }, [link, processTransaction]);
 
   function download() {
     qrCode.download({ name: "FilQR", extension: "png" });
@@ -218,43 +234,53 @@ function Coupons(
                 required
               />
               <div className="block mt-8 justify-center">
-                <button
-                  type="submit"
-                  className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
-                >
-                  GENERATE
-                  {loading != false ? (
-                    <MoonLoader
-                      color={"#ffffff"}
-                      className="ml-2"
-                      loading={true}
-                      size={20}
-                      speedMultiplier="1"
-                    />
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6 ml-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                {isConnected ? (
+                  <button
+                    type="submit"
+                    className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                  >
+                    GENERATE
+                    {loading != false ? (
+                      <MoonLoader
+                        color={"#ffffff"}
+                        className="ml-2"
+                        loading={true}
+                        size={20}
+                        speedMultiplier="1"
                       />
-                    </svg>
-                  )}
-                </button>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6 ml-2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={connectWallet}
+                    className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                  >
+                    Connect wallet
+                  </button>
+                )}
               </div>
             </form>
           </div>
           <div className="p-2 h-full sm:pt-72 sm:border-l border-gray-200 text-center"></div>
           <div className="lg:max-w-lg lg:w-full md:w-1/2 ">
             <center>
-              {link != null ? (
+              {link != null && processTransaction != true ? (
                 <>
                   <div ref={qrRef} />
                   <button
@@ -333,23 +359,48 @@ function Coupons(
               ) : (
                 <>
                   {loading != false ? (
-                    <iframe
-                      width={375}
-                      height={575}
-                      className="border border-gray-300 opacity-50"
-                      title="vCard"
-                      srcDoc={`<!DOCTYPE html> <html> <head> <meta name="viewport" content="width=device-width, initial-scale=1" /> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; color: black; background-color: ${color}; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .coupon { border: 5px dashed white; width: 80%; border-radius: 15px; max-width: 500px; margin-top: 2rem; text-align: left; align-items: left; } .container { padding: 2px 16px; background-color: #f1f1f1; } .promo { background: #ccc; border-radius: 5px; padding: 3px; } .expire { color: red; } .button { align-items: center; appearance: none; background-color: #fcfcfd; border-radius: 4px; border-width: 0; box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; box-sizing: border-box; color: #36395a; cursor: pointer; display: inline-flex; font-family: "JetBrains Mono", monospace; height: 48px; justify-content: center; line-height: 1; list-style: none; overflow: hidden; padding-left: 16px; padding-right: 16px; position: relative; text-align: left; text-decoration: none; transition: box-shadow 0.15s, transform 0.15s; user-select: none; -webkit-user-select: none; touch-action: manipulation; white-space: nowrap; will-change: box-shadow, transform; font-size: 18px; } .button:focus { box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; } .button:hover { box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; transform: translateY(-2px); } .button:active { box-shadow: #d6d6e7 0 3px 7px inset; transform: translateY(2px); } .link-div{ margin-top: 2rem; margin-bottom: 2rem; } .link { text-decoration: none; } </style> </head> <body> <center> <div class="coupon"> <div class="container"> <h3>${companyName}</h3> </div> <img src="${
-                        couponImageLink == null
-                          ? "https://dweb.link/ipfs/bafkreibqqchv2yrh2p5s6b2e6fablv6j3ys5ex4ipg3jyyvn257hmzux7i/"
-                          : couponImageLink
-                      }" alt="Coupon image" style="width:100%; height: auto;"> <div class="container" style="background-color: white; margin-top: -3px" > <h2><b>${title}</b></h2> <p>${desc}</p> </div> <div class="container"> <p>Use Promo Code: <span class="promo">${promoCode}</span></p> <p class="expire">Expires: ${expireDate}</p> </div> </div> <div class="link-div"> <a class="link" href="${redeemLink}" target="_blank" rel="noopener noreferrer" ><button class="button" role="button">Redeem now</button></a > </div> </center> </body> </html> `}
-                    ></iframe>
+                    <>
+                      <iframe
+                        width={375}
+                        height={575}
+                        className="border border-gray-300 opacity-50"
+                        title="Coupons"
+                        srcDoc={`<!DOCTYPE html> <html> <head> <meta name="viewport" content="width=device-width, initial-scale=1" /> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; color: black; background-color: ${color}; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .coupon { border: 5px dashed white; width: 80%; border-radius: 15px; max-width: 500px; margin-top: 2rem; text-align: left; align-items: left; } .container { padding: 2px 16px; background-color: #f1f1f1; } .promo { background: #ccc; border-radius: 5px; padding: 3px; } .expire { color: red; } .button { align-items: center; appearance: none; background-color: #fcfcfd; border-radius: 4px; border-width: 0; box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; box-sizing: border-box; color: #36395a; cursor: pointer; display: inline-flex; font-family: "JetBrains Mono", monospace; height: 48px; justify-content: center; line-height: 1; list-style: none; overflow: hidden; padding-left: 16px; padding-right: 16px; position: relative; text-align: left; text-decoration: none; transition: box-shadow 0.15s, transform 0.15s; user-select: none; -webkit-user-select: none; touch-action: manipulation; white-space: nowrap; will-change: box-shadow, transform; font-size: 18px; } .button:focus { box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; } .button:hover { box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; transform: translateY(-2px); } .button:active { box-shadow: #d6d6e7 0 3px 7px inset; transform: translateY(2px); } .link-div{ margin-top: 2rem; margin-bottom: 2rem; } .link { text-decoration: none; } </style> </head> <body> <center> <div class="coupon"> <div class="container"> <h3>${companyName}</h3> </div> <img src="${
+                          couponImageLink == null
+                            ? "https://dweb.link/ipfs/bafkreibqqchv2yrh2p5s6b2e6fablv6j3ys5ex4ipg3jyyvn257hmzux7i/"
+                            : couponImageLink
+                        }" alt="Coupon image" style="width:100%; height: auto;"> <div class="container" style="background-color: white; margin-top: -3px" > <h2><b>${title}</b></h2> <p>${desc}</p> </div> <div class="container"> <p>Use Promo Code: <span class="promo">${promoCode}</span></p> <p class="expire">Expires: ${expireDate}</p> </div> </div> <div class="link-div"> <a class="link" href="${redeemLink}" target="_blank" rel="noopener noreferrer" ><button class="button" role="button">Redeem now</button></a > </div> </center> </body> </html> `}
+                      ></iframe>{" "}
+                      <BeatLoader
+                        color={"#3B82F6"}
+                        className="mt-4"
+                        loading={true}
+                        size={10}
+                        speedMultiplier="1"
+                      />
+                      <p className="mt-2 text-sm truncate w-[300px]">
+                        Txn hash:{" "}
+                        <a
+                          className="text-blue-500"
+                          href={
+                            "https://hyperspace.filfox.info/en/tx/" + txnHash
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {txnHash}
+                        </a>
+                      </p>
+                      <p className="mt-2 text-sm">
+                        Please wait till the Txn is completed :)
+                      </p>
+                    </>
                   ) : (
                     <iframe
                       width={375}
                       height={575}
                       className="border border-gray-300"
-                      title="vCard"
+                      title="Coupons"
                       srcDoc={`<!DOCTYPE html> <html> <head> <meta name="viewport" content="width=device-width, initial-scale=1" /> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; color: black; background-color: ${color}; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .coupon { border: 5px dashed white; width: 80%; border-radius: 15px; max-width: 500px; margin-top: 2rem; text-align: left; align-items: left; } .container { padding: 2px 16px; background-color: #f1f1f1; } .promo { background: #ccc; border-radius: 5px; padding: 3px; } .expire { color: red; } .button { align-items: center; appearance: none; background-color: #fcfcfd; border-radius: 4px; border-width: 0; box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; box-sizing: border-box; color: #36395a; cursor: pointer; display: inline-flex; font-family: "JetBrains Mono", monospace; height: 48px; justify-content: center; line-height: 1; list-style: none; overflow: hidden; padding-left: 16px; padding-right: 16px; position: relative; text-align: left; text-decoration: none; transition: box-shadow 0.15s, transform 0.15s; user-select: none; -webkit-user-select: none; touch-action: manipulation; white-space: nowrap; will-change: box-shadow, transform; font-size: 18px; } .button:focus { box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; } .button:hover { box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset; transform: translateY(-2px); } .button:active { box-shadow: #d6d6e7 0 3px 7px inset; transform: translateY(2px); } .link-div{ margin-top: 2rem; margin-bottom: 2rem; } .link { text-decoration: none; } </style> </head> <body> <center> <div class="coupon"> <div class="container"> <h3>${companyName}</h3> </div> <img src="${
                         couponImageLink == null
                           ? "https://dweb.link/ipfs/bafkreibqqchv2yrh2p5s6b2e6fablv6j3ys5ex4ipg3jyyvn257hmzux7i/"

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Web3Storage } from "web3.storage";
 import QRCodeStyling from "qr-code-styling";
 import MoonLoader from "react-spinners/MoonLoader";
+import BeatLoader from "react-spinners/BeatLoader";
 
 const token = process.env.REACT_APP_WEB3STORAGE_API_TOKEN;
 const client = new Web3Storage({ token });
@@ -23,13 +24,13 @@ const qrCode = new QRCodeStyling({
   },
 });
 
-function Text(
+function Text({
   isConnected,
   accountAddress,
   connectWallet,
   walletStatus,
-  QrCodeContract
-) {
+  getQrCodeContract,
+}) {
   const qrRef = useRef(null);
   const [title, setTitle] = useState("#Title");
   const [heading1, setHeading1] = useState("#Heading");
@@ -42,6 +43,8 @@ function Text(
   const [cid, setCid] = useState(null);
   const [link, setLink] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [processTransaction, setProcessTransaction] = useState(false);
+  const [txnHash, setTxnHash] = useState(null);
 
   async function handleData(e) {
     e.preventDefault();
@@ -56,6 +59,20 @@ function Text(
     const cid = await client.put(file, { wrapWithDirectory: false });
     setCid(cid);
     setLink(`https://w3s.link/ipfs/${cid}/`);
+    if (getQrCodeContract) {
+      try {
+        setProcessTransaction(true);
+        await getQrCodeContract.methods
+          .uploadFile(cid, file[0].size, "Text")
+          .send({ from: accountAddress })
+          .on("transactionHash", function (hash) {
+            setTxnHash(hash);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setProcessTransaction(false);
     setLoading(false);
   }
 
@@ -64,7 +81,7 @@ function Text(
       data: link,
     });
     qrCode.append(qrRef.current);
-  }, [link]);
+  }, [link, processTransaction]);
 
   function download() {
     qrCode.download({ name: "FilQR", extension: "png" });
@@ -183,43 +200,53 @@ function Text(
                 className="resize-y mt-2 w-full bg-white rounded border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-white focus:border-indigo-500 text-base outline-none text-gray-700 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
               <div className="block mt-8 justify-center">
-                <button
-                  type="submit"
-                  className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
-                >
-                  GENERATE
-                  {loading != false ? (
-                    <MoonLoader
-                      color={"#ffffff"}
-                      className="ml-2"
-                      loading={true}
-                      size={20}
-                      speedMultiplier="1"
-                    />
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6 ml-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                {isConnected ? (
+                  <button
+                    type="submit"
+                    className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                  >
+                    GENERATE
+                    {loading != false ? (
+                      <MoonLoader
+                        color={"#ffffff"}
+                        className="ml-2"
+                        loading={true}
+                        size={20}
+                        speedMultiplier="1"
                       />
-                    </svg>
-                  )}
-                </button>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6 ml-2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={connectWallet}
+                    className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                  >
+                    Connect wallet
+                  </button>
+                )}
               </div>
             </form>
           </div>
           <div className="p-2 h-full sm:pt-72 sm:border-l border-gray-200 text-center"></div>
           <div className="lg:max-w-lg lg:w-full md:w-1/2 ">
             <center>
-              {link != null ? (
+              {link != null && processTransaction != true ? (
                 <>
                   <div ref={qrRef} />
                   <button
@@ -298,20 +325,45 @@ function Text(
               ) : (
                 <>
                   {loading != false ? (
-                    <iframe
-                      width={375}
-                      height={575}
-                      className="border border-gray-300 opacity-50"
-                      title="Social Media"
-                      srcDoc={`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Blog</title> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .title { padding-top: 1.5rem; padding-bottom: 1.5rem; margin-bottom: 4rem; color: #ffffff; text-align: center; background-color: ${color}; } h1 { margin-bottom: 1rem; font-size: 1.5rem; line-height: 2rem; font-weight: 500px; text-align: center; } h2{ text-align: left; align-items: left; color: #1F2937; } .main { padding-left: 2rem; padding-right: 2rem; text-align: left; align-items: left; margin-left: -0.5rem; margin-right: -0.5rem; box-sizing: border-box; margin-bottom: 3rem; } .text{ text-align: left; align-items: left; color: #374151; } .text-div { padding: 0.5rem; width: 100%; } /* Small (sm) */ @media (min-width: 640px) { h1 { font-size: 1.875rem; line-height: 2.25rem; } .main { margin-bottom: 3rem; margin-left: auto; margin-right: auto; } .text-div { width: 50%; } } /* Medium (md) */ @media (min-width: 768px) { } /* Large (lg) */ @media (min-width: 1024px) { .main { margin-bottom: 3rem; width: 66%; } } /* Extra Large (xl) */ @media (min-width: 1280px) { } </style> </head> <body> <section> <div> <div class="title"> <h1>${title}</h1> </div> <div class="main"> <center> <div class="text-div"> <h2>${heading1}</h2> <p class="text">${text1}</p> <h2>${heading2}</h2> <p class="text">${text2}</p> <h2>${heading3}</h2> <p class="text">${text3}</p> </div> </center> </div> </div> </section> </body> </html> `}
-                    ></iframe>
+                    <>
+                      <iframe
+                        width={375}
+                        height={575}
+                        className="border border-gray-300 opacity-50"
+                        title="Text"
+                        srcDoc={`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Blog</title> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .title { padding-top: 1.5rem; padding-bottom: 1.5rem; margin-bottom: 4rem; color: #ffffff; text-align: center; background-color: ${color}; } h1 { margin-bottom: 1rem; font-size: 1.5rem; line-height: 2rem; font-weight: 500px; text-align: center; } h2{ text-align: left; align-items: left; color: #1F2937; } .main { padding-left: 2rem; padding-right: 2rem; text-align: left; align-items: left; margin-left: -0.5rem; margin-right: -0.5rem; box-sizing: border-box; margin-bottom: 3rem; } .text{ text-align: left; align-items: left; color: #374151; } .text-div { padding: 0.5rem; width: 100%; } /* Small (sm) */ @media (min-width: 640px) { h1 { font-size: 1.875rem; line-height: 2.25rem; } .main { margin-bottom: 3rem; margin-left: auto; margin-right: auto; } .text-div { width: 50%; } } /* Medium (md) */ @media (min-width: 768px) { } /* Large (lg) */ @media (min-width: 1024px) { .main { margin-bottom: 3rem; width: 66%; } } /* Extra Large (xl) */ @media (min-width: 1280px) { } </style> </head> <body> <section> <div> <div class="title"> <h1>${title}</h1> </div> <div class="main"> <center> <div class="text-div"> <h2>${heading1}</h2> <p class="text">${text1}</p> <h2>${heading2}</h2> <p class="text">${text2}</p> <h2>${heading3}</h2> <p class="text">${text3}</p> </div> </center> </div> </div> </section> </body> </html>  `}
+                      ></iframe>{" "}
+                      <BeatLoader
+                        color={"#3B82F6"}
+                        className="mt-4"
+                        loading={true}
+                        size={10}
+                        speedMultiplier="1"
+                      />
+                      <p className="mt-2 text-sm truncate w-[300px]">
+                        Txn hash:{" "}
+                        <a
+                          className="text-blue-500"
+                          href={
+                            "https://hyperspace.filfox.info/en/tx/" + txnHash
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {txnHash}
+                        </a>
+                      </p>
+                      <p className="mt-2 text-sm">
+                        Please wait till the Txn is completed :)
+                      </p>
+                    </>
                   ) : (
                     <iframe
                       width={375}
                       height={575}
                       className="border border-gray-300"
-                      title="Social Media"
-                      srcDoc={`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Blog</title> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .title { padding-top: 1.5rem; padding-bottom: 1.5rem; margin-bottom: 4rem; color: #ffffff; text-align: center; background-color: ${color}; } h1 { margin-bottom: 1rem; font-size: 1.5rem; line-height: 2rem; font-weight: 500px; text-align: center; } h2{ text-align: left; align-items: left; color: #1F2937; } .main { padding-left: 2rem; padding-right: 2rem; text-align: left; align-items: left; margin-left: -0.5rem; margin-right: -0.5rem; box-sizing: border-box; margin-bottom: 3rem; } .text{ text-align: left; align-items: left; color: #374151; } .text-div { padding: 0.5rem; width: 100%; } /* Small (sm) */ @media (min-width: 640px) { h1 { font-size: 1.875rem; line-height: 2.25rem; } .main { margin-bottom: 3rem; margin-left: auto; margin-right: auto; } .text-div { width: 50%; } } /* Medium (md) */ @media (min-width: 768px) { } /* Large (lg) */ @media (min-width: 1024px) { .main { margin-bottom: 3rem; width: 66%; } } /* Extra Large (xl) */ @media (min-width: 1280px) { } </style> </head> <body> <section> <div> <div class="title"> <h1>${title}</h1> </div> <div class="main"> <center> <div class="text-div"> <h2>${heading1}</h2> <p class="text">${text1}</p> <h2>${heading2}</h2> <p class="text">${text2}</p> <h2>${heading3}</h2> <p class="text">${text3}</p> </div> </center> </div> </div> </section> </body> </html> `}
+                      title="Text"
+                      srcDoc={`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Blog</title> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .title { padding-top: 1.5rem; padding-bottom: 1.5rem; margin-bottom: 4rem; color: #ffffff; text-align: center; background-color: ${color}; } h1 { margin-bottom: 1rem; font-size: 1.5rem; line-height: 2rem; font-weight: 500px; text-align: center; } h2{ text-align: left; align-items: left; color: #1F2937; } .main { padding-left: 2rem; padding-right: 2rem; text-align: left; align-items: left; margin-left: -0.5rem; margin-right: -0.5rem; box-sizing: border-box; margin-bottom: 3rem; } .text{ text-align: left; align-items: left; color: #374151; } .text-div { padding: 0.5rem; width: 100%; } /* Small (sm) */ @media (min-width: 640px) { h1 { font-size: 1.875rem; line-height: 2.25rem; } .main { margin-bottom: 3rem; margin-left: auto; margin-right: auto; } .text-div { width: 50%; } } /* Medium (md) */ @media (min-width: 768px) { } /* Large (lg) */ @media (min-width: 1024px) { .main { margin-bottom: 3rem; width: 66%; } } /* Extra Large (xl) */ @media (min-width: 1280px) { } </style> </head> <body> <section> <div> <div class="title"> <h1>${title}</h1> </div> <div class="main"> <center> <div class="text-div"> <h2>${heading1}</h2> <p class="text">${text1}</p> <h2>${heading2}</h2> <p class="text">${text2}</p> <h2>${heading3}</h2> <p class="text">${text3}</p> </div> </center> </div> </div> </section> </body> </html>  `}
                     ></iframe>
                   )}
                 </>

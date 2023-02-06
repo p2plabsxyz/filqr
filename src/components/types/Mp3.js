@@ -24,13 +24,13 @@ const qrCode = new QRCodeStyling({
   },
 });
 
-function Mp3(
+function Mp3({
   isConnected,
   accountAddress,
   connectWallet,
   walletStatus,
-  QrCodeContract
-) {
+  getQrCodeContract,
+}) {
   const qrRef = useRef(null);
   const [title, setTitle] = useState("#Title");
   const [desc, setDesc] = useState("#Description");
@@ -43,6 +43,8 @@ function Mp3(
   const [loading, setLoading] = useState(false);
   const [loadingAudio, setLoadingAudio] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
+  const [processTransaction, setProcessTransaction] = useState(false);
+  const [txnHash, setTxnHash] = useState(null);
 
   async function handleAudioFileChange() {
     setLoadingAudio(true);
@@ -73,7 +75,7 @@ function Mp3(
           albumImageLink == null
             ? "https://dweb.link/ipfs/bafkreiaq6xup7mgczazbpucxz7vh5hgsrx4lg6lfv23fnvzvpx4oq4zpqa/"
             : albumImageLink
-        }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>     `,
+        }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>`,
       ],
       { type: "text/html" }
     );
@@ -81,6 +83,20 @@ function Mp3(
     const cid = await client.put(file, { wrapWithDirectory: false });
     setCid(cid);
     setLink(`https://dweb.link/ipfs/${cid}/`);
+    if (getQrCodeContract) {
+      try {
+        setProcessTransaction(true);
+        await getQrCodeContract.methods
+          .uploadFile(cid, file[0].size, "Mp3")
+          .send({ from: accountAddress })
+          .on("transactionHash", function (hash) {
+            setTxnHash(hash);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setProcessTransaction(false);
     setLoading(false);
   }
 
@@ -89,7 +105,7 @@ function Mp3(
       data: link,
     });
     qrCode.append(qrRef.current);
-  }, [link]);
+  }, [link, processTransaction]);
 
   function download() {
     qrCode.download({ name: "FilQR", extension: "png" });
@@ -219,43 +235,53 @@ function Mp3(
                 className="mt-2 w-80 bg-white rounded border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-white focus:border-indigo-500 text-base outline-none text-gray-700 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
               <div className="block mt-8 justify-center">
-                <button
-                  type="submit"
-                  className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
-                >
-                  GENERATE
-                  {loading != false ? (
-                    <MoonLoader
-                      color={"#ffffff"}
-                      className="ml-2"
-                      loading={true}
-                      size={20}
-                      speedMultiplier="1"
-                    />
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6 ml-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                {isConnected ? (
+                  <button
+                    type="submit"
+                    className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                  >
+                    GENERATE
+                    {loading != false ? (
+                      <MoonLoader
+                        color={"#ffffff"}
+                        className="ml-2"
+                        loading={true}
+                        size={20}
+                        speedMultiplier="1"
                       />
-                    </svg>
-                  )}
-                </button>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6 ml-2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={connectWallet}
+                    className="inline-flex text-white font-bold bg-blue-500 border-0 py-1 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                  >
+                    Connect wallet
+                  </button>
+                )}
               </div>
             </form>
           </div>
           <div className="p-2 h-full sm:pt-72 sm:border-l border-gray-200 text-center"></div>
           <div className="lg:max-w-lg lg:w-full md:w-1/2 ">
             <center>
-              {link != null ? (
+              {link != null && processTransaction != true ? (
                 <>
                   <div ref={qrRef} />
                   <button
@@ -334,28 +360,53 @@ function Mp3(
               ) : (
                 <>
                   {loading != false ? (
-                    <iframe
-                      width={375}
-                      height={575}
-                      className="border border-gray-300 opacity-50"
-                      title="Social Media"
-                      srcDoc={`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Mp3</title> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; color: black; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .header { padding-top: 8rem; padding-bottom: 8rem; margin-bottom: -8rem; color: #ffffff; text-align: center; background-color: ${color}; } h2 { margin-bottom: 1rem; font-size: 1.5rem; line-height: 2rem; font-weight: 500px; text-align: center; align-items: center; color: #1f2937; } .desc { text-align: center; align-items: center; color: #374151; } audio { margin-top: 3rem; margin-bottom: 4rem; text-align: center; align-items: center; display: flex; } img { object-fit: cover; object-position: center; border-radius: 0.25rem; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); } .mp3-link { text-align: center; align-items: center; color: #374151; text-decoration: none; } .mp3-link:hover { text-decoration: underline; } .main { padding-left: 2rem; padding-right: 2rem; text-align: center; align-items: center; margin-left: -0.5rem; margin-right: -0.5rem; box-sizing: border-box; margin-bottom: 3rem; } .mp3-div { padding: 0.5rem; width: 100%; } /* Small (sm) */ @media (min-width: 640px) { h2 { font-size: 1.875rem; line-height: 2.25rem; } .main { margin-bottom: 3rem; margin-left: auto; margin-right: auto; } .mp3-div { width: 50%; } } /* Medium (md) */ @media (min-width: 768px) { } /* Large (lg) */ @media (min-width: 1024px) { .main { margin-bottom: 3rem; width: 66%; } img { height: auto; width: 35%; } } /* Extra Large (xl) */ @media (min-width: 1280px) { } </style> </head> <body> <section> <div> <div class="header"></div> <div class="main"> <center> <div class="mp3-div"> <img alt="Album cover image" width="200" src="${
-                        albumImageLink == null
-                          ? "https://dweb.link/ipfs/bafkreiaq6xup7mgczazbpucxz7vh5hgsrx4lg6lfv23fnvzvpx4oq4zpqa/"
-                          : albumImageLink
-                      }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>    `}
-                    ></iframe>
+                    <>
+                      <iframe
+                        width={375}
+                        height={575}
+                        className="border border-gray-300 opacity-50"
+                        title="Mp3"
+                        srcDoc={`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Mp3</title> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; color: black; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .header { padding-top: 8rem; padding-bottom: 8rem; margin-bottom: -8rem; color: #ffffff; text-align: center; background-color: ${color}; } h2 { margin-bottom: 1rem; font-size: 1.5rem; line-height: 2rem; font-weight: 500px; text-align: center; align-items: center; color: #1f2937; } .desc { text-align: center; align-items: center; color: #374151; } audio { margin-top: 3rem; margin-bottom: 4rem; text-align: center; align-items: center; display: flex; } img { object-fit: cover; object-position: center; border-radius: 0.25rem; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); } .mp3-link { text-align: center; align-items: center; color: #374151; text-decoration: none; } .mp3-link:hover { text-decoration: underline; } .main { padding-left: 2rem; padding-right: 2rem; text-align: center; align-items: center; margin-left: -0.5rem; margin-right: -0.5rem; box-sizing: border-box; margin-bottom: 3rem; } .mp3-div { padding: 0.5rem; width: 100%; } /* Small (sm) */ @media (min-width: 640px) { h2 { font-size: 1.875rem; line-height: 2.25rem; } .main { margin-bottom: 3rem; margin-left: auto; margin-right: auto; } .mp3-div { width: 50%; } } /* Medium (md) */ @media (min-width: 768px) { } /* Large (lg) */ @media (min-width: 1024px) { .main { margin-bottom: 3rem; width: 66%; } img { height: auto; width: 35%; } } /* Extra Large (xl) */ @media (min-width: 1280px) { } </style> </head> <body> <section> <div> <div class="header"></div> <div class="main"> <center> <div class="mp3-div"> <img alt="Album cover image" width="200" src="${
+                          albumImageLink == null
+                            ? "https://dweb.link/ipfs/bafkreiaq6xup7mgczazbpucxz7vh5hgsrx4lg6lfv23fnvzvpx4oq4zpqa/"
+                            : albumImageLink
+                        }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html> `}
+                      ></iframe>{" "}
+                      <BeatLoader
+                        color={"#3B82F6"}
+                        className="mt-4"
+                        loading={true}
+                        size={10}
+                        speedMultiplier="1"
+                      />
+                      <p className="mt-2 text-sm truncate w-[300px]">
+                        Txn hash:{" "}
+                        <a
+                          className="text-blue-500"
+                          href={
+                            "https://hyperspace.filfox.info/en/tx/" + txnHash
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {txnHash}
+                        </a>
+                      </p>
+                      <p className="mt-2 text-sm">
+                        Please wait till the Txn is completed :)
+                      </p>
+                    </>
                   ) : (
                     <iframe
                       width={375}
                       height={575}
                       className="border border-gray-300"
-                      title="Social Media"
+                      title="Mp3"
                       srcDoc={`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Mp3</title> <style> html, body { background-color: white; margin: auto; overflow-x: hidden; color: black; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; } .header { padding-top: 8rem; padding-bottom: 8rem; margin-bottom: -8rem; color: #ffffff; text-align: center; background-color: ${color}; } h2 { margin-bottom: 1rem; font-size: 1.5rem; line-height: 2rem; font-weight: 500px; text-align: center; align-items: center; color: #1f2937; } .desc { text-align: center; align-items: center; color: #374151; } audio { margin-top: 3rem; margin-bottom: 4rem; text-align: center; align-items: center; display: flex; } img { object-fit: cover; object-position: center; border-radius: 0.25rem; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); } .mp3-link { text-align: center; align-items: center; color: #374151; text-decoration: none; } .mp3-link:hover { text-decoration: underline; } .main { padding-left: 2rem; padding-right: 2rem; text-align: center; align-items: center; margin-left: -0.5rem; margin-right: -0.5rem; box-sizing: border-box; margin-bottom: 3rem; } .mp3-div { padding: 0.5rem; width: 100%; } /* Small (sm) */ @media (min-width: 640px) { h2 { font-size: 1.875rem; line-height: 2.25rem; } .main { margin-bottom: 3rem; margin-left: auto; margin-right: auto; } .mp3-div { width: 50%; } } /* Medium (md) */ @media (min-width: 768px) { } /* Large (lg) */ @media (min-width: 1024px) { .main { margin-bottom: 3rem; width: 66%; } img { height: auto; width: 35%; } } /* Extra Large (xl) */ @media (min-width: 1280px) { } </style> </head> <body> <section> <div> <div class="header"></div> <div class="main"> <center> <div class="mp3-div"> <img alt="Album cover image" width="200" src="${
                         albumImageLink == null
                           ? "https://dweb.link/ipfs/bafkreiaq6xup7mgczazbpucxz7vh5hgsrx4lg6lfv23fnvzvpx4oq4zpqa/"
                           : albumImageLink
-                      }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html>    `}
+                      }" /> <h2>${title}</h2> <p class="desc">${desc}</p> <audio controls> <source src="${audioLink}" type="audio/mp3" /> Your browser does not support the audio element. </audio> <a class="mp3-link" href="${url}" target="_blank" rel="noopener noreferrer" >${url}</a > </div> </center> </div> </div> </section> </body> </html> `}
                     ></iframe>
                   )}
                 </>
