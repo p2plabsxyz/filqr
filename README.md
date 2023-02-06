@@ -1,4 +1,4 @@
-#FilQr
+# FilQr
 
 Billions of QR Codes are scanned each day!
 FilQr allows you to generate decentralized QR Codes by publishing the content to IPFS by using web3.storage and writes all the data to Filecoin blockchain for decentralized and immutable file sharing.
@@ -27,7 +27,7 @@ Platforms: remix, fleek.co
 
 ![Screenshot 2023-02-06 at 9 55 09 PM](https://user-images.githubusercontent.com/68826419/217039213-08526860-c065-4098-985d-05f7d5131159.png)
 
-
+![Screenshot 2023-02-06 at 9 55 18 PM](https://user-images.githubusercontent.com/68826419/217039815-c281fe22-7ac3-4f69-a4de-1901bb9c5a52.png)
 
 ![Screenshot 2023-02-06 at 10 39 56 PM](https://user-images.githubusercontent.com/68826419/217039309-26913761-e7fc-4fe6-b4e0-474db2f1160d.png)
 
