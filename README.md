@@ -16,6 +16,11 @@ Libs/frameworks: React.js, web3.js
 Tools: IPFS, web3.storage, tailwindcss
 Platforms: remix, fleek.co 
 
+### Roadmap:
+- [ ] Dynamic QR Codes (display scans and decentralized analytics).
+- [ ] On-chain QR Codes (will also store CIDs of QR codes to Filecoin Blockchain).
+- [ ] W3up integration.
+- [ ] Subscription model.
 
 ![Screenshot 2023-02-06 at 9 51 26 PM](https://user-images.githubusercontent.com/68826419/217039109-e5fecb30-772d-41e1-9c37-0724e2d1c6f0.png)
 
