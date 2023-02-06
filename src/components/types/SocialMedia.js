@@ -153,6 +153,9 @@ function SocialMedia({
             <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
               Social Media
             </h1>
+            <p class="block mt-2 text-sm font-medium text-gray-600">
+              Create your decentralized linkTree.
+            </p>
             <form onSubmit={handleData}>
               <input
                 type="text"

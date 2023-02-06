@@ -63,6 +63,7 @@ function QrCodeDashboard({
               <th className="w-20 px-4 py-2 text-left">CID</th>
             </tr>
           </thead>
+          {fileCount != null ? 
           <tbody className="overflow-y-scroll max-h-450">
             {files.map((file, key) => (
               <tr key={key} className="odd:bg-gray-200">
@@ -98,6 +99,7 @@ function QrCodeDashboard({
               </tr>
             ))}
           </tbody>
+          : <p className="mt-4 mb-4">0 files found! :/</p>}
         </table>
       </center>
     </div>

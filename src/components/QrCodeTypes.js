@@ -14,13 +14,13 @@ function QrCodeTypes() {
               Powered by Filecoin and ⁂ web3.storage
             </p>
             <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">
-              Select your QR Code type:
+              Select your QR Code type 👇
             </p>
           </div>
           <div className="flex flex-wrap lg:w-3/6 sm:mx-auto sm:mb-2 -mx-2">
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/text">
-                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border border-gray-300 hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -41,7 +41,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/socialmedia">
-                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border border-gray-300 hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -63,7 +63,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/vcard">
-                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border border-gray-300 hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -85,7 +85,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/coupons">
-                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border border-gray-300 hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -107,7 +107,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/mp3">
-                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border border-gray-300 hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -129,7 +129,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/video">
-                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border border-gray-300 hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -150,7 +150,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/apps">
-                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border border-gray-300 hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -172,7 +172,7 @@ function QrCodeTypes() {
             </div>
             <div className="p-2 sm:w-1/2 w-full">
               <Link to="/docs">
-                <div className="bg-white rounded border hover:border-blue-300 flex p-4 h-full items-center">
+                <div className="bg-white rounded border border-gray-300 hover:border-blue-300 flex p-4 h-full items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

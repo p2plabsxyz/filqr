@@ -13,7 +13,7 @@ function About() {
             <h2 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
               Grow your business with <code>FilQr</code>.
             </h2>
-            <h3 class="text-lg mb-2">With FilQr your QR Codes are:</h3>
+            <h3 class="text-lg mb-2">Generate decentralized QR Codes in seconds using our customizable templates such as text, social media, vCards, coupons, mp3, video, documents, etc.</h3>
             <p class="flex items-center text-gray-600 mb-2">
               <span class="w-4 h-4 mr-2 inline-flex items-center justify-center bg-blue-400 text-white rounded-full flex-shrink-0">
                 <svg
@@ -90,7 +90,7 @@ function About() {
       </section>
       {/* QR Code types */}
       <section class="text-gray-600 body-font">
-        <div class="container px-5 py-24 mx-auto">
+        <div class="container lg:px-16 px-6 py-24 mx-auto">
           <div class="flex flex-col text-center w-full mb-14">
             <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">
               QR Code Examples
@@ -98,7 +98,7 @@ function About() {
           </div>
           <div class="flex flex-wrap -m-4">
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <div class="block relative h-48 rounded border overflow-hidden">
+              <div class="block relative h-48 rounded border bg-white overflow-hidden">
                 <img
                   alt="Billboards"
                   class="object-cover object-center w-full h-full block"
@@ -112,7 +112,7 @@ function About() {
               </div>
             </div>
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <div class="block relative h-48 rounded border overflow-hidden">
+              <div class="block relative h-48 rounded border bg-white overflow-hidden">
                 <img
                   alt="Vehicles"
                   class="object-cover object-center w-full h-full block"
@@ -126,7 +126,7 @@ function About() {
               </div>
             </div>
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <div class="block relative h-48 rounded border overflow-hidden">
+              <div class="block relative h-48 rounded border bg-white overflow-hidden">
                 <img
                   alt="Billboards"
                   class="object-cover object-center w-full h-full block"
@@ -140,7 +140,7 @@ function About() {
               </div>
             </div>
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <div class="block relative h-48 rounded border overflow-hidden">
+              <div class="block relative h-48 rounded border bg-white overflow-hidden">
                 <img
                   alt="Websites"
                   class="object-cover object-center w-full h-full block"
@@ -154,7 +154,7 @@ function About() {
               </div>
             </div>
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <div class="block relative h-48 rounded border overflow-hidden">
+              <div class="block relative h-48 rounded border bg-white overflow-hidden">
                 <img
                   alt="Food packaging"
                   class="object-cover object-center w-full h-full block"
@@ -168,7 +168,7 @@ function About() {
               </div>
             </div>
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <div class="block relative h-48 rounded border overflow-hidden">
+              <div class="block relative h-48 rounded border bg-white overflow-hidden">
                 <img
                   alt="Product Packaging"
                   class="object-cover object-center w-full h-full block"
@@ -182,7 +182,7 @@ function About() {
               </div>
             </div>
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <div class="block relative h-48 rounded border overflow-hidden">
+              <div class="block relative h-48 rounded border bg-white overflow-hidden">
                 <img
                   alt="Labels"
                   class="object-cover object-center w-full h-full block"
@@ -196,7 +196,7 @@ function About() {
               </div>
             </div>
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <div class="block relative h-48 rounded border overflow-hidden">
+              <div class="block relative h-48 rounded border bg-white overflow-hidden">
                 <img
                   alt="Badges"
                   class="object-cover object-center w-full h-full block"
@@ -214,7 +214,7 @@ function About() {
       </section>
       {/* Pricing */}
       <section class="text-gray-600 body-font overflow-hidden">
-        <div class="container px-8 py-36 mx-auto">
+        <div class="container lg:px-20 px-6 py-28 mb-28 mx-auto">
           <div class="flex flex-col text-center w-full mb-20">
             <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">
               Coming soon!
