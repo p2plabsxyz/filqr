@@ -288,7 +288,7 @@ function App() {
               </Route>
             </Routes>
             <Routes>
-              {/* <Route path="/" exact element={<About />} /> */}
+              <Route path="/" exact element={<About />} />
             </Routes>
             <Footer />
           </Router>
