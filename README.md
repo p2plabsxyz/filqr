@@ -10,11 +10,11 @@ Say no more to centralized, breakable, costly, and data-selling QR code services
 
 After selecting QR Code types, static templates are generated based on the user's input, FilQR has over 8 different customizable templates. These templates are published to IPFS and later the IPFS CID generates decentralized QR Codes, every single QR Code generation is payable and writes all the data to the Filecoin blockchain.
 
-Languages: Solidity, JavaScript, HTML5, CSS3
-Blockchain: Filecoin Hyperspace testnet
-Libs/frameworks: React.js, web3.js
-Tools: IPFS, web3.storage, tailwindcss
-Platforms: remix, fleek.co 
+* Languages: Solidity, JavaScript, HTML5, CSS3
+* Blockchain: Filecoin Hyperspace testnet
+* Libs/frameworks: React.js, web3.js
+* Tools: IPFS, web3.storage, tailwindcss
+* Platforms: remix, fleek.co 
 
 ### Roadmap:
 - [ ] Dynamic QR Codes (display scans and decentralized analytics).
