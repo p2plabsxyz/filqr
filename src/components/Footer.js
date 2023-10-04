@@ -14,16 +14,6 @@ function Footer() {
               target="_blank"
             >
               @akhileshthite_
-            </a>{" "}
-            at
-            <a
-              href="https://ethglobal.com/events/spacewarp"
-              class="text-gray-600 font-medium ml-1 hover:underline text-gray-700"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-             FVM SpaceWarp
-            </a>
           </p>
         </div>
       </footer>
